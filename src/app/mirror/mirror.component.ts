@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 
 import { AppState } from '../app.service';
+import { PluginSlotDirective } from '../lib/plugin/plugin-slot.directive';
 
 @Component({
   // The selector is what angular internally uses
@@ -11,7 +12,7 @@ import { AppState } from '../app.service';
   // where, in this case, selector is the string 'home'
   selector: 'mirror',
   // We need to tell Angular's Dependency Injection which providers are in our app.
-  providers: [],
+  providers: [PluginSlotDirective],
   // Our list of styles in our component. We may add more to compose many styles together
   styleUrls: [ './mirror.component.css' ],
   // Every Angular template is first compiled by the browser before Angular runs it's compiler

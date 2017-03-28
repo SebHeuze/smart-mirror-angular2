@@ -1,8 +1,11 @@
-import {Injectable} from "@angular/core";
-import {ReplaySubject} from "rxjs/Rx";
-
+import { Injectable } from "@angular/core";
+import { ReplaySubject } from "rxjs/Rx";
+import { PluginData } from "./plugin";
 @Injectable()
 export class PluginService {
+
+    private plugins;
+    private change;
     constructor() {
         this.plugins = [];
 
@@ -11,15 +14,15 @@ export class PluginService {
         this.loadPlugins();
     }
 
-    loadPlugins() {
-        System.import('/plugins.js').then((pluginsModule) => {
-            pluginsModule.default.forEach( (pluginUrl) =>
+    private loadPlugins() {
+        System.import('../../plugins.js').then((pluginsModule) => {
+            pluginsModule.default.forEach((pluginUrl) =>
                 this.loadPlugin(pluginUrl)
             );
         });
     }
 
-    loadPlugin(url) {
+    private loadPlugin(url) {
         return System.import(url).then((pluginModule) => {
             const Plugin = pluginModule.default;
             const pluginData = {
@@ -36,5 +39,16 @@ export class PluginService {
         });
     }
 
+    private getPluginData(slot) {
+        return this.plugins.reduce((components, pluginData) => {
+            return components.concat(
+                pluginData.config.placements
+                .filter((placement) => placement.slot === slot)
+                .map((placement) => new PluginData(pluginData, placement))
+            );
+        }, []);
+
+
+    }
 
 }
