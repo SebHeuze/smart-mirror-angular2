@@ -1,5 +1,5 @@
-import {Injectable} from "@angular/core";
-import {ReplaySubject} from "rxjs/Rx";
+import { Injectable } from "@angular/core";
+import { ReplaySubject } from "rxjs/Rx";
 
 @Injectable()
 export class PluginService {
@@ -13,7 +13,7 @@ export class PluginService {
 
     loadPlugins() {
         System.import('/plugins.js').then((pluginsModule) => {
-            pluginsModule.default.forEach( (pluginUrl) =>
+            pluginsModule.default.forEach((pluginUrl) =>
                 this.loadPlugin(pluginUrl)
             );
         });
@@ -36,5 +36,16 @@ export class PluginService {
         });
     }
 
+    getPluginData(slot) {
+        return this.plugins.reduce((components, pluginData) => {
+            return components.concat(
+                pluginData.config.placements
+                .filter((placement) => placement.slot === slot)
+                .map((placement) => new PluginData(pluginData, placement))
+            );
+        }, []);
+
+
+    }
 
 }
